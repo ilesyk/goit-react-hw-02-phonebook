@@ -4,7 +4,7 @@ export const Filter = ({ onSearch }) => {
       <p>Find contacts by name</p>
       <input
         type="text"
-        onChange={evt => onSearch(evt.target.value)}
+        onChange={evt => onSearch(evt)}
         placeholder="Topic filter"
       />
     </div>

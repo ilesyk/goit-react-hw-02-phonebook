@@ -8,36 +8,41 @@ import { GlobalStyle } from './GlobalStyle';
 
 export class App extends Component {
   state = {
-    contacts: [
-      // { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      // { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      // { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      // { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
+
   addContact = newContact => {
-    if (this.state.contacts.find(contact => contact.name.toLowerCase() === newContact.name.toLowerCase())) {
+    if (
+      this.state.contacts.find(
+        contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+      )
+    ) {
       return alert(`${newContact.name} is already in contacts.`);
     }
     return this.setState(prevState => ({
       contacts: [...prevState.contacts, { id: nanoid(), ...newContact }],
     }));
   };
+
   deleteContact = id => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
-  getFilteredContact = (filteredName) => {return this.state.contacts.filter(contact => {
-    return contact.name.toLowerCase().includes(filteredName.toLowerCase());
-  });
-  };
-  
-  findContact = input => {this.setState({
-      filter: input,
+
+  getFilteredContact = filteredName => {
+    return this.state.contacts.filter(contact => {
+      return contact.name.toLowerCase().includes(filteredName.toLowerCase());
     });
   };
+
+  findContact = evt => {
+    this.setState({
+      filter: evt.target.value,
+    });
+  };
+
   render() {
     const filteredContacts = this.getFilteredContact(this.state.filter);
     return (
@@ -46,10 +51,10 @@ export class App extends Component {
         <ContactForm onAdd={this.addContact} />
         <h2>Contacts</h2>
         <Filter onSearch={this.findContact} />
-          <ContactsList
-            contacts={filteredContacts? filteredContacts: this.state.contacts}
-            onDelete={this.deleteContact}
-          />
+        <ContactsList
+          contacts={filteredContacts ? filteredContacts : this.state.contacts}
+          onDelete={this.deleteContact}
+        />
         <GlobalStyle />
       </Layout>
     );
