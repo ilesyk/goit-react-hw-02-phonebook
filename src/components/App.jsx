@@ -3,7 +3,6 @@ import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { ContactsList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
-import { ContactElement } from './ContactElement/ContactElement';
 import { Layout } from './Layout';
 import { GlobalStyle } from './GlobalStyle';
 
@@ -18,7 +17,7 @@ export class App extends Component {
     filter: '',
   };
   addContact = newContact => {
-    if (this.state.contacts.find(contact => contact.name === newContact.name)) {
+    if (this.state.contacts.find(contact => contact.name.toLowerCase() === newContact.name.toLowerCase())) {
       return alert(`${newContact.name} is already in contacts.`);
     }
     return this.setState(prevState => ({
@@ -28,36 +27,29 @@ export class App extends Component {
   deleteContact = id => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== id),
-      filter: prevState.contacts.filter(contact => contact.id !== id),
     }));
   };
-  findContact = input => {
-    const filteredContact = this.state.contacts.filter(contact => {
-      return contact.name.toLowerCase().includes(input.toLowerCase());
-    });
-
-    return this.setState({
-      filter: input ? filteredContact : '',
+  getFilteredContact = (filteredName) => {return this.state.contacts.filter(contact => {
+    return contact.name.toLowerCase().includes(filteredName.toLowerCase());
+  });
+  };
+  
+  findContact = input => {this.setState({
+      filter: input,
     });
   };
   render() {
+    const filteredContacts = this.getFilteredContact(this.state.filter);
     return (
       <Layout>
         <h1>Phonebook</h1>
         <ContactForm onAdd={this.addContact} />
         <h2>Contacts</h2>
         <Filter onSearch={this.findContact} />
-        {this.state.filter.length > 0 ? (
-          <ContactElement
-            contacts={this.state.filter}
-            onDelete={this.deleteContact}
-          />
-        ) : (
           <ContactsList
-            contacts={this.state.contacts}
+            contacts={filteredContacts? filteredContacts: this.state.contacts}
             onDelete={this.deleteContact}
           />
-        )}
         <GlobalStyle />
       </Layout>
     );
