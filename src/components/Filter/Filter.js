@@ -1,4 +1,4 @@
-export const Filter=({ onSearch })=> {
+export const Filter = ({ onSearch }) => {
   return (
     <div>
       <p>Find contacts by name</p>
@@ -9,4 +9,4 @@ export const Filter=({ onSearch })=> {
       />
     </div>
   );
-}
+};
